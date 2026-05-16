@@ -1,26 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Fredoka+One&family=Dancing+Script:wght@700&display=swap');
+
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand colors from logo */
+  --purple:       #5E1F8A;
+  --purple-light: #8B35C1;
+  --purple-dark:  #3D1259;
+  --magenta:      #C41E8C;
+  --magenta-light:#E040A8;
+  --orange:       #F97316;
+  --orange-light: #FED7AA;
+  --background:   #FDFAF8;
+  --foreground:   #2D1B4E;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Nunito', sans-serif;
+  overflow-x: hidden;
+}
+
+.font-fredoka  { font-family: 'Fredoka One', cursive; }
+.font-dancing  { font-family: 'Dancing Script', cursive; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f3e4ff; }
+::-webkit-scrollbar-thumb { background: var(--magenta); border-radius: 3px; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-15px) rotate(5deg); }
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50%       { transform: rotate(3deg); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+@keyframes pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.8; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.float         { animation: float        4s ease-in-out infinite; }
+.float-delay   { animation: float        4s ease-in-out infinite 1s; }
+.float-delay-2 { animation: float        4s ease-in-out infinite 2s; }
+.spin-slow     { animation: spin-slow    8s linear      infinite; }
+.bounce-slow   { animation: bounce-slow  2s ease-in-out infinite; }
+.wiggle        { animation: wiggle       2s ease-in-out infinite; }
+
+/* Primary CTA button */
+.cta-btn {
+  background: linear-gradient(135deg, var(--magenta) 0%, var(--orange) 100%);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(196,30,140,0.35);
+}
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(196,30,140,0.5);
+}
+
+/* Secondary purple button */
+.stripe-btn {
+  background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(94,31,138,0.4);
+}
+.stripe-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(94,31,138,0.5);
+}
+
+.plan-card { transition: all 0.3s ease; }
+.plan-card:hover { transform: translateY(-8px); }
+.plan-card.selected {
+  border-color: var(--magenta);
+  box-shadow: 0 0 0 3px rgba(196,30,140,0.2), 0 20px 40px rgba(196,30,140,0.15);
+}
+
+/* Floating label inputs */
+.input-group { position: relative; }
+.input-group input,
+.input-group textarea,
+.input-group select {
+  width: 100%;
+  padding: 26px 18px 10px;
+  border: 2px solid #E8D5F5;
+  border-radius: 16px;
+  background: white;
+  font-size: 16px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  color: var(--foreground);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  min-height: 64px;
+}
+.input-group input:focus,
+.input-group textarea:focus,
+.input-group select:focus {
+  border-color: var(--magenta);
+  box-shadow: 0 0 0 4px rgba(196,30,140,0.08);
+}
+.input-group label {
+  position: absolute;
+  top: 50%;
+  left: 18px;
+  transform: translateY(-50%);
+  font-size: 15px;
+  font-weight: 700;
+  color: #9B7BBE;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+.input-group textarea ~ label {
+  top: 20px;
+  transform: none;
+}
+.input-group input:focus ~ label,
+.input-group input:not(:placeholder-shown) ~ label,
+.input-group select:focus ~ label,
+.input-group select:not([value=""]) ~ label,
+.input-group textarea:focus ~ label,
+.input-group textarea:not(:placeholder-shown) ~ label {
+  top: 9px;
+  transform: none;
+  font-size: 11px;
+  color: var(--magenta);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
