@@ -15,8 +15,11 @@ export async function GET(req: NextRequest) {
 
   try {
     const pool = await getPool();
+    const days = req.nextUrl.searchParams.get("days");
+    const where = days ? `WHERE created_at >= NOW() - INTERVAL ${parseInt(days)} DAY` : "";
+
     const [rows] = await pool.query<StatusRow[]>(
-      `SELECT status, COUNT(*) as count FROM summercamp_sy GROUP BY status ORDER BY count DESC`
+      `SELECT status, COUNT(*) as count FROM summercamp_sy ${where} GROUP BY status ORDER BY count DESC`
     );
 
     const total = rows.reduce((sum, r) => sum + r.count, 0);
@@ -26,7 +29,7 @@ export async function GET(req: NextRequest) {
       .filter((r) => ["step_plan", "step_child", "step_parent", "step_timing"].includes(r.status))
       .reduce((sum, r) => sum + r.count, 0);
 
-    return NextResponse.json({ total, paid, pendingPayment, inProgress, breakdown: rows });
+    return NextResponse.json({ total, paid, pendingPayment, inProgress, breakdown: rows, period: days ? `Last ${days} days` : "All time" });
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 });
   }
