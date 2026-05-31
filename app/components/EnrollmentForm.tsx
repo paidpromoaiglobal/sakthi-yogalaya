@@ -17,7 +17,7 @@ interface FormData {
   timing: string;
 }
 
-const STEPS = ["Plan", "Child", "Parent", "Timing"];
+const STEPS = ["Plan", "Contact", "Child", "Timing"];
 
 const slideVariants = {
   enter: (dir: number) => ({ x: dir > 0 ? 60 : -60, opacity: 0 }),
@@ -29,8 +29,8 @@ const slideVariants = {
 function buildStepPayload(step: number, enrollmentId: string, form: FormData) {
   const base = { enrollment_id: enrollmentId, step };
   if (step === 0) return { ...base, plan: form.plan };
-  if (step === 1) return { ...base, kidsName: form.kidsName, dob: form.dob, grade: form.grade, experience: form.experience };
-  if (step === 2) return { ...base, parentsName: form.parentsName, whatsapp: form.whatsapp, email: form.email, address: form.address };
+  if (step === 1) return { ...base, parentsName: form.parentsName, whatsapp: form.whatsapp, email: form.email };
+  if (step === 2) return { ...base, kidsName: form.kidsName, dob: form.dob, grade: form.grade, experience: form.experience, address: form.address };
   return base;
 }
 
@@ -73,8 +73,8 @@ export default function EnrollmentForm() {
 
   const canProceed = () => {
     if (step === 0) return !!form.plan;
-    if (step === 1) return !!(form.kidsName && form.dob && form.grade);
-    if (step === 2) return !!(form.parentsName && form.whatsapp && form.email && form.address);
+    if (step === 1) return !!(form.parentsName && form.whatsapp && form.email);
+    if (step === 2) return !!(form.kidsName && form.dob && form.grade);
     if (step === 3) return !!form.timing;
     return false;
   };
@@ -119,7 +119,7 @@ export default function EnrollmentForm() {
           <h2 className="font-fredoka text-4xl sm:text-5xl mb-3" style={{ color: "var(--purple-dark)" }}>
             Enroll Your Child! <span className="wiggle inline-block">🎉</span>
           </h2>
-          <p className="text-gray-500 font-medium text-base">4 quick steps to secure your child&apos;s spot</p>
+          <p className="text-gray-500 font-medium text-base">4 quick steps · We&apos;ll save your spot as you go</p>
         </div>
 
         {/* Progress stepper */}
@@ -221,8 +221,30 @@ export default function EnrollmentForm() {
                   </div>
                 )}
 
-                {/* STEP 1: Child */}
+                {/* STEP 1: Parent Contact */}
                 {step === 1 && (
+                  <div>
+                    <h3 className="font-fredoka text-3xl" style={{ color: "var(--purple-dark)", marginBottom: "8px" }}>Your Contact Details 👨‍👩‍👧</h3>
+                    <p className="text-gray-400 font-medium" style={{ marginBottom: "40px" }}>How do we reach you?</p>
+                    <div className="input-group" style={{ marginBottom: "32px" }}>
+                      <input type="text" placeholder=" " value={form.parentsName} onChange={(e) => set("parentsName", e.target.value)} required />
+                      <label>Parent&apos;s Full Name *</label>
+                    </div>
+                    <div className="grid sm:grid-cols-2" style={{ gap: "32px", marginBottom: "56px" }}>
+                      <div className="input-group">
+                        <input type="tel" placeholder=" " value={form.whatsapp} onChange={(e) => set("whatsapp", e.target.value)} required />
+                        <label>WhatsApp Number *</label>
+                      </div>
+                      <div className="input-group">
+                        <input type="email" placeholder=" " value={form.email} onChange={(e) => set("email", e.target.value)} required />
+                        <label>Email Address *</label>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* STEP 2: Child */}
+                {step === 2 && (
                   <div>
                     <h3 className="font-fredoka text-3xl" style={{ color: "var(--purple-dark)", marginBottom: "8px" }}>About Your Child 👧</h3>
                     <p className="text-gray-400 font-medium" style={{ marginBottom: "40px" }}>Tell us about the young yogi!</p>
@@ -240,7 +262,7 @@ export default function EnrollmentForm() {
                         <label>Grade / Class *</label>
                       </div>
                     </div>
-                    <div className="input-group" style={{ marginBottom: "56px" }}>
+                    <div className="input-group" style={{ marginBottom: "32px" }}>
                       <select value={form.experience} onChange={(e) => set("experience", e.target.value)}>
                         <option value="">Select experience level</option>
                         <option value="none">No experience — complete beginner</option>
@@ -249,31 +271,9 @@ export default function EnrollmentForm() {
                       </select>
                       <label>Previous Yoga Experience</label>
                     </div>
-                  </div>
-                )}
-
-                {/* STEP 2: Parent */}
-                {step === 2 && (
-                  <div>
-                    <h3 className="font-fredoka text-3xl" style={{ color: "var(--purple-dark)", marginBottom: "8px" }}>Parent / Guardian 👨‍👩‍👧</h3>
-                    <p className="text-gray-400 font-medium" style={{ marginBottom: "40px" }}>How do we reach you?</p>
-                    <div className="input-group" style={{ marginBottom: "32px" }}>
-                      <input type="text" placeholder=" " value={form.parentsName} onChange={(e) => set("parentsName", e.target.value)} required />
-                      <label>Parent&apos;s Full Name *</label>
-                    </div>
-                    <div className="grid sm:grid-cols-2" style={{ gap: "32px", marginBottom: "32px" }}>
-                      <div className="input-group">
-                        <input type="tel" placeholder=" " value={form.whatsapp} onChange={(e) => set("whatsapp", e.target.value)} required />
-                        <label>WhatsApp Number *</label>
-                      </div>
-                      <div className="input-group">
-                        <input type="email" placeholder=" " value={form.email} onChange={(e) => set("email", e.target.value)} required />
-                        <label>Email Address *</label>
-                      </div>
-                    </div>
                     <div className="input-group" style={{ marginBottom: "56px" }}>
-                      <textarea rows={3} placeholder=" " value={form.address} onChange={(e) => set("address", e.target.value)} required style={{ paddingTop: "26px", minHeight: "100px" }} />
-                      <label>Home Address *</label>
+                      <textarea rows={3} placeholder=" " value={form.address} onChange={(e) => set("address", e.target.value)} style={{ paddingTop: "26px", minHeight: "100px" }} />
+                      <label>Home Address (optional)</label>
                     </div>
                   </div>
                 )}

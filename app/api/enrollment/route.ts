@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getPool } from "@/lib/db";
 import type { RowDataPacket } from "mysql2";
 
-const STEP_STATUS = ["step_plan", "step_child", "step_parent", "step_timing"] as const;
+const STEP_STATUS = ["step_plan", "step_parent", "step_child", "step_timing"] as const;
 
 export async function POST(req: NextRequest) {
   try {
